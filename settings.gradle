@@ -1,0 +1,10 @@
+rootProject.name = 'TallerMultiproject'
+
+include 'admin-service'
+include 'Bookings'
+include 'config-service'
+include 'eureka-service'
+include 'gateway-service'
+include 'Movies'
+include 'Showtimes'
+include 'Users'
