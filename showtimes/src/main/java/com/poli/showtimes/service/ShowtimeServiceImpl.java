@@ -1,7 +1,5 @@
 package com.poli.showtimes.service;
 
-
-import com.ctc.wstx.dtd.OptionalModel;
 import com.poli.showtimes.persistence.entity.Showtimes;
 import com.poli.showtimes.persistence.repository.MoviesRepository;
 import com.poli.showtimes.persistence.repository.ShowtimeRepository;
@@ -56,8 +54,6 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
             showtimes.setDate(showtimesNew.getDate());
             showtimes.setMovies(showtimesNew.getMovies());
-
-            moviesRepository.saveAll(showtimes.getMovies());
 
             showtimes = showtimeRepository.save(showtimes);
 
