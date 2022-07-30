@@ -3,13 +3,11 @@ package com.poli.bookings.persistence.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "Bookings")
 public class Bookings {
 
@@ -17,10 +15,15 @@ public class Bookings {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "userid")
     private Long userid;
 
-    @Column(name = "showtimeid")
     private Long showtimeid;
 
+    @JoinTable(
+            name = "rel_bookings_movies",
+            joinColumns = @JoinColumn(name = "FK_BOOKINGS", nullable = false),
+            inverseJoinColumns = @JoinColumn(name="FK_MOVIES", nullable = false)
+    )
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Movies> movies;
 }

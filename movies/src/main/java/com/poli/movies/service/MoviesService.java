@@ -7,7 +7,7 @@ import java.util.List;
 public interface MoviesService {
     MovieDTO save(MovieDTO movieDTO);
 
-    void Delete(Long id);
+    boolean Delete(Long id);
 
     MovieDTO findById(Long id);
 

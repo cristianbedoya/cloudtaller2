@@ -36,9 +36,13 @@ public class MoviesController {
     @DeleteMapping("/{id}")
     public Response delete(@PathVariable("id") Long id) {
 
-        moviesService.Delete(id);
+        boolean resultDelete = moviesService.Delete(id);
 
-        return builder.success(id);
+        if(resultDelete) {
+            return builder.success(id);
+        } else {
+            return builder.failed("No se puede eliminar una película si tiene programaciones o reservas asociadas");
+        }
     }
 
     @GetMapping("/{id}")

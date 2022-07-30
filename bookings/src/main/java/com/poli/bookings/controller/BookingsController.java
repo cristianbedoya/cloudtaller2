@@ -47,7 +47,7 @@ public class BookingsController {
     public Response getById(@PathVariable("id") Long id){
         BookingsDTO bookingsDTO = bookingsService.findById(id);
         if(bookingsDTO==null){
-            return builder.success();
+            return  builder.failed("No se encontraron registros");
         }
         return builder.success(bookingsDTO);
     }
@@ -56,7 +56,7 @@ public class BookingsController {
     public Response getByUser(@PathVariable("id") Long id){
         BookingsDTO bookingsDTO = bookingsService.findById(id);
         if(bookingsDTO==null){
-            return builder.success();
+            return builder.failed("No se encontraron registros");
         }
         return builder.success(bookingsDTO);
     }

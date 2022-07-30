@@ -8,5 +8,5 @@ public interface UserService {
 
     UserDTO findById(Long id);
 
-    void Delete(Long id);
+    boolean Delete(Long id);
 }

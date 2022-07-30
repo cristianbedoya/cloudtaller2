@@ -1,10 +1,15 @@
 package com.poli.movies.service;
 
+import com.poli.movies.clientfeign.BookingsClient;
+import com.poli.movies.clientfeign.ShowtimesClient;
 import com.poli.movies.persistence.entity.Movie;
 import com.poli.movies.persistence.repository.MovieRepository;
+import com.poli.movies.service.dto.BookingsDTO;
 import com.poli.movies.service.dto.MovieDTO;
+import com.poli.movies.service.dto.ShowtimeDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +21,8 @@ import java.util.stream.Collectors;
 public class MoviesServiceImpl implements MoviesService {
 
     private final MovieRepository movieRepository;
+    private final BookingsClient bookingsClient;
+    private final ShowtimesClient showtimesClient;
 
     @Override
     public MovieDTO save(MovieDTO movieDTO) {
@@ -28,10 +35,26 @@ public class MoviesServiceImpl implements MoviesService {
     }
 
     @Override
-    public void Delete(Long id) {
-        Optional<Movie> user = movieRepository.findById(id);
+    public boolean Delete(Long id) {
+        ModelMapper modelMapper = new ModelMapper();
+        List<BookingsDTO> bookingsDTOS = modelMapper.map(bookingsClient.getAll().getData(), new TypeToken<List<BookingsDTO>>() {}.getType());
+        List<ShowtimeDTO> showtimeDTOS =  modelMapper.map(showtimesClient.getAll().getData(), new TypeToken<List<ShowtimeDTO>>() {}.getType());
 
-        user.ifPresent(movieRepository::delete);
+        var resultBookings = bookingsDTOS.stream().map(x->{
+            return x.getMovies().stream().filter(y->id.equals(y.getId())).collect(Collectors.toList()).stream().findFirst();
+        }).filter(Optional::isPresent).collect(Collectors.toList());
+
+        var resultShowtime = showtimeDTOS.stream().map(x->{
+            return x.getMovies().stream().filter(y->id.equals(y.getId())).collect(Collectors.toList()).stream().findFirst();
+        }).filter(Optional::isPresent).collect(Collectors.toList());
+
+        if(resultBookings.isEmpty() && resultShowtime.isEmpty()) {
+            Optional<Movie> user = movieRepository.findById(id);
+            user.ifPresent(movieRepository::delete);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override

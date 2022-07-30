@@ -11,6 +11,6 @@ public interface BookingsService {
 
     BookingsDTO findById(Long id);
 
-
     List<BookingsDTO> getAll();
+
 }

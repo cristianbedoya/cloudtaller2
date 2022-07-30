@@ -25,6 +25,16 @@ public class ShowtimeController {
     private final ShowtimeService showtimeService;
     private final ResponseBuild builder;
 
+
+    @GetMapping()
+    public Response getAll(){
+        List<ShowtimeDTO> showtimeDTOS = showtimeService.getAll();
+        if(showtimeDTOS==null){
+            return builder.success();
+        }
+        return builder.success(showtimeDTOS);
+    }
+
     @PostMapping()
     public Response save(@Valid @RequestBody ShowtimeDTO showtimeDTO, BindingResult result){
         if(result.hasErrors()){
@@ -32,14 +42,6 @@ public class ShowtimeController {
         }
         showtimeDTO = showtimeService.save(showtimeDTO);
         return builder.success(showtimeDTO);
-    }
-
-    @DeleteMapping("/{id}")
-    public Response delete(@PathVariable("id") Long id) {
-
-        showtimeService.Delete(id);
-
-        return builder.success(id);
     }
 
     @GetMapping("/{id}")
@@ -56,10 +58,10 @@ public class ShowtimeController {
     @PutMapping("/{id}")
     public Response update(@PathVariable("id") Long id,@RequestBody ShowtimeDTO showtimeDTO){
 
-        showtimeService.update(showtimeDTO);
+        showtimeDTO = showtimeService.update(id,showtimeDTO);
 
         if(showtimeDTO==null){
-            return builder.success();
+            return builder.failed(showtimeDTO);
         }
         return builder.success(showtimeDTO);
     }

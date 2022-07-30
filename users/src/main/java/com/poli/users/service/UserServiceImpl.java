@@ -1,12 +1,16 @@
 package com.poli.users.service;
 
+import com.poli.users.clientfeign.BookingsClient;
 import com.poli.users.persistence.entity.User;
 import com.poli.users.persistence.repository.UserRepository;
+import com.poli.users.service.dto.BookingsDTO;
 import com.poli.users.service.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,6 +18,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final BookingsClient bookingsClient;
 
     @Override
     public UserDTO save(UserDTO userDto) {
@@ -37,10 +42,17 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void Delete(Long id) {
+    public boolean Delete(Long id) {
+        ModelMapper mapper = new ModelMapper();
 
-        Optional<User> user = userRepository.findById(id);
+        BookingsDTO bookingResponse = mapper.map(bookingsClient.getByUser(id).getData(), BookingsDTO.class);
 
-        user.ifPresent(userRepository::delete);
+        if(bookingResponse == null) {
+            Optional<User> user = userRepository.findById(id);
+            user.ifPresent(userRepository::delete);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

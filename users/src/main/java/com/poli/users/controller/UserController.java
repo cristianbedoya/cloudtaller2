@@ -38,16 +38,18 @@ public class UserController {
     @DeleteMapping("/{id}")
     public Response delete(@PathVariable("id") Long id) {
 
-        userService.Delete(id);
-
-        return builder.success(id);
+        boolean resultDelete = userService.Delete(id);
+        if(resultDelete){
+            builder.success(id);
+        }
+        return builder.failed("No se puede eliminar un usuario si tiene reservas asociadas ");
     }
 
     @GetMapping("/{id}")
     public Response getById(@PathVariable("id") Long id){
         UserDTO userDTO = userService.findById(id);
         if(userDTO==null){
-            return builder.success();
+            return builder.failed("No se encontraron registros");
         }
         return builder.success(userDTO);
     }

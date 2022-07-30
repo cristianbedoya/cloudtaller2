@@ -7,12 +7,11 @@ import java.util.List;
 
 public interface ShowtimeService  {
 
-
     ShowtimeDTO save(ShowtimeDTO showtimeDTO);
-
-    void Delete(Long id);
 
     ShowtimeDTO findById(Long id);
 
-    void update(ShowtimeDTO showtimeDTO);
+    ShowtimeDTO update(Long id, ShowtimeDTO showtimeDTO);
+
+    List<ShowtimeDTO> getAll();
 }
